@@ -11,7 +11,7 @@
  */
 package assignment4;
 
-import java.util.List;
+import java.util.*;
 
 /* see the PDF for descriptions of the methods and fields in this class
  * you may add fields, methods or inner classes to Critter ONLY if you make your additions private
@@ -39,7 +39,9 @@ public abstract class Critter {
 	public static void setSeed(long new_seed) {
 		rand = new java.util.Random(new_seed);
 	}
-
+	
+	
+	
 	/*
 	 * a one-character long string that visually depicts your critter in the
 	 * ASCII interface
@@ -58,10 +60,61 @@ public abstract class Critter {
 	private int y_coord;
 
 	protected final void walk(int direction) {
+		switch(direction){//move critter based on direction
+		case 0:																//directions:
+			this.x_coord = (this.x_coord + 1) % Params.world_width;			//	3 2 1
+			break;															//	4 * 0
+		case 1:																//	5 6 7
+			this.x_coord = (this.x_coord + 1) % Params.world_width;
+			this.y_coord--;
+			if(this.y_coord < 0){
+				this.y_coord = Params.world_height - 1;
+			}
+			break;
+		case 2:
+			this.y_coord--;
+			if(this.y_coord < 0){
+				this.y_coord = Params.world_height - 1;
+			}
+			break;
+		case 3:
+			this.x_coord--;
+			if(this.x_coord < 0){
+				this.x_coord = Params.world_width - 1;
+			}
+			this.y_coord--;
+			if(this.y_coord < 0){
+				this.y_coord = Params.world_height - 1;
+			}
+			break;
+		case 4:
+			this.x_coord--;
+			if(this.x_coord < 0){
+				this.x_coord = Params.world_width - 1;
+			}
+			break;
+		case 5:
+			this.x_coord--;
+			if(this.x_coord < 0){
+				this.x_coord = Params.world_width - 1;
+			}
+			this.y_coord = (this.y_coord + 1) % Params.world_height;
+			break;
+		case 6:
+			this.y_coord = (this.y_coord + 1) % Params.world_height;
+			break;
+		case 7:
+			this.x_coord = (this.x_coord + 1) % Params.world_width;
+			this.y_coord = (this.y_coord + 1) % Params.world_height;
+			break;
+		}
+		this.energy -= Params.walk_energy_cost;
 	}
 
 	protected final void run(int direction) {
-
+		this.walk(direction);//move critter in given direction twice
+		this.walk(direction);
+		this.energy -= (Params.run_energy_cost - (2 * Params.walk_energy_cost));
 	}
 
 	protected final void reproduce(Critter offspring, int direction) {
@@ -207,9 +260,28 @@ public abstract class Critter {
 	}
 
 	public static void worldTimeStep() {
-		for(Critter c : population){
+		ArrayList<EncounterPair> encounters = new ArrayList<EncounterPair>();
+		int[][] location = new int[Params.world_height][Params.world_width];
+		for(int i = 0; i < population.size(); i++){
+			Critter c = population.get(i);
 			c.doTimeStep();
+			int indexCheck = location[c.y_coord][c.x_coord];//checks if c just moved into a position occupied by a critter
+			if(indexCheck != 0){							//that has already initiated doTimeStep
+				if(indexCheck == -1){						//adds the 2 critters into a list
+					indexCheck = 0;
+				}
+				EncounterPair pair = new EncounterPair(population.get(indexCheck),c);
+				encounters.add(pair);
+			}
+			else{//records index of c into location in matrix 
+				int j = i;
+				if(j == 0){
+					j = -1;
+				}
+				location[c.y_coord][c.x_coord] = j;
+			}
 		}
+		//TODO deal with 2 critters in same spot
 	}
 
 	public static void displayWorld() {
