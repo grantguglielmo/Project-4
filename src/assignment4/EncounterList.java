@@ -6,17 +6,17 @@ public class EncounterList {
 	public ArrayList<ArrayList<Critter>> encounters;
 	public static ArrayList<ArrayList<Critter>> cleanList;
 	
+	static{
+		cleanList = new ArrayList<ArrayList<Critter>>();
+		for(int i = 0; i < Params.world_height*Params.world_width; i++){
+			cleanList.add(null);
+		}
+	}
+	
 	public EncounterList(){
 		encounters = new ArrayList<ArrayList<Critter>>();
 		for(int i = 0; i < Params.world_height*Params.world_width; i++){
 			encounters.add(null);
-		}
-	}
-	
-	public static void init(){
-		cleanList = new ArrayList<ArrayList<Critter>>();
-		for(int i = 0; i < Params.world_height*Params.world_width; i++){
-			cleanList.add(null);
 		}
 	}
 	

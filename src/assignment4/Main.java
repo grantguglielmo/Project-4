@@ -67,8 +67,46 @@ public class Main {
 
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
-        
-        System.out.println("GLHF");
+        boolean cont = true;
+        while(cont){
+        	System.out.print("critters> ");
+        	String command = kb.next();
+        	int cycles = 1;
+        	switch(command){
+        	case "quit":
+        		cont = false;
+        		break;
+        	case "show":
+        		Critter.displayWorld();
+        		break;
+        	case "step":
+        		if(kb.hasNextInt()){
+        			cycles = kb.nextInt();
+        		}
+        		for(int i = 0; i < cycles; i++){
+        			Critter.worldTimeStep();
+        		}
+        		break;
+        	case "seed":
+        		long seed = kb.nextInt();
+        		Critter.setSeed(seed);
+        		break;
+        	case "make":
+        		String className =kb.next();
+        		if(kb.hasNextInt()){
+        			cycles = kb.nextInt();
+        		}
+        		for(int i = 0; i < cycles; i++){
+        			try {
+						Critter.makeCritter(className);
+					} catch (InvalidCritterException e) {
+						e.printStackTrace();
+					}
+        		}
+        		break;
+        	default:
+        	}
+        }
         
         /* Write your code above */
         System.out.flush();

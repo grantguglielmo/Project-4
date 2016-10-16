@@ -119,10 +119,9 @@ public abstract class Critter {
 			return;
 		}
 		int lowerHalf = this.energy/2;
-		offspring.energy = lowerHalf;
+		offspring.energy = lowerHalf + Params.walk_energy_cost;
 		this.energy = this.energy - lowerHalf;
 		offspring.walk(direction);
-		offspring.energy += Params.walk_energy_cost;
 		babies.add(offspring);
 	}
 
@@ -145,7 +144,7 @@ public abstract class Critter {
 		Critter makeCritter;
 		try {
 			@SuppressWarnings("rawtypes")
-			Class testClass = Class.forName(critter_class_name);// sets
+			Class testClass = Class.forName(myPackage + "." + critter_class_name);// sets
 																// testClass to
 																// critter_class_name
 			makeCritter = (Critter) testClass.newInstance();// runs default
@@ -330,6 +329,13 @@ public abstract class Critter {
 		kill();
 		for(Critter babe : babies){
 			population.add(babe);
+		}
+		for(int i = 0; i < Params.refresh_algae_count; i++){
+			try {
+				makeCritter(myPackage + ".Algae");
+			} catch (InvalidCritterException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
