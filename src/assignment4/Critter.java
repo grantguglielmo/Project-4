@@ -22,7 +22,6 @@ public abstract class Critter {
 	private static String myPackage;
 	private static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	private static List<Critter> critterWorld = new java.util.ArrayList<Critter>();
 
 	// Gets the package name. This assumes that Critter and its subclasses are
 	// all in the same package.
@@ -59,10 +58,10 @@ public abstract class Critter {
 
 	protected final void walk(int direction) {
 		switch (direction) {// move critter based on direction
-		case 0: // directions:
+		case 0: 													// directions:
 			this.x_coord = (this.x_coord + 1) % Params.world_width; // 3 2 1
-			break; // 4 * 0
-		case 1: // 5 6 7
+			break; 													// 4 * 0
+		case 1: 													// 5 6 7
 			this.x_coord = (this.x_coord + 1) % Params.world_width;
 			this.y_coord--;
 			if (this.y_coord < 0) {
@@ -293,6 +292,8 @@ public abstract class Critter {
 					Critter b = currentSpot.get(1);
 					boolean aFight = a.fight(b.toString());
 					boolean bFight = b.fight(a.toString());
+					int oldX = a.x_coord;
+					int oldY = a.y_coord;
 					if (((bFight && aFight)||(a.x_coord == b.x_coord && a.y_coord == b.y_coord)) && (b.energy > 0 && a.energy > 0)) {
 						int aRoll = Critter.getRandomInt(a.energy);
 						int bRoll = Critter.getRandomInt(a.energy);
@@ -307,16 +308,63 @@ public abstract class Critter {
 						}
 					}
 					else if(!aFight){
-						
+						if(bFight){
+							currentSpot.remove(0);
+						}
 					}
-					else{
-						
+					else {
+						currentSpot.remove(1);
 					}
 				}
 			}
 		}
+		kill();
+		for(Critter babe : babies){
+			population.add(babe);
+		}
 	}
-
+	
+	private static void kill(){
+		for(int i = 0; i < population.size(); i++){
+			if(population.get(i).energy < 1){
+				population.remove(i);
+				i--;
+			}
+		}
+	}
+	
 	public static void displayWorld() {
+		int[][] indexMatrix = new int[Params.world_height][Params.world_width];
+		if(population.size() > 0){
+			indexMatrix[population.get(0).y_coord][population.get(0).y_coord] = -1;
+		}
+		for(int i = 1; i < population.size(); i++){
+			indexMatrix[population.get(i).y_coord][population.get(i).y_coord] = i;
+		}
+		System.out.print("\n+");
+		for(int i = 0; i < Params.world_width; i++){
+			System.out.print("-");
+		}
+		System.out.print("+\n");
+		for(int i = 0; i < Params.world_height; i++){
+			System.out.print("|");
+			for(int j = 0; j < Params.world_width; j++){
+				if(indexMatrix[i][j] == 0){
+					System.out.print(" ");
+				}
+				else if(indexMatrix[i][j] == -1){
+					System.out.print(population.get(0).toString());
+				}
+				else{
+					System.out.print(population.get(indexMatrix[i][j]).toString());
+				}
+			}
+			System.out.print("|\n");
+		}
+		System.out.print("+");
+		for(int i = 0; i < Params.world_width; i++){
+			System.out.print("-");
+		}
+		System.out.print("+\n");
 	}
 }
