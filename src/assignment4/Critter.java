@@ -172,7 +172,7 @@ public abstract class Critter {
 		List<Critter> result = new java.util.ArrayList<Critter>();
 		for (Critter c : population) {
 			try {
-				if (c.getClass().equals(Class.forName(critter_class_name))) {
+				if (c.getClass().equals(Class.forName(myPackage + "." + critter_class_name))) {
 					result.add(c);
 				}
 			} catch (Exception e) {

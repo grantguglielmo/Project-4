@@ -10,6 +10,7 @@
  * Fall 2016
  */
 package assignment4; // cannot be in default package
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -70,41 +71,97 @@ public class Main {
         boolean cont = true;
         while(cont){
         	System.out.print("critters> ");
-        	String command = kb.next();
+        	String commandLine = kb.nextLine();
+        	String[] commands = commandLine.split(" ");
         	int cycles = 1;
-        	switch(command){
+        	switch(commands[0]){
         	case "quit":
+        		if(commands.length > 1){
+        			System.out.println("error processing: " + commandLine);
+    				break;
+        		}
         		cont = false;
         		break;
         	case "show":
+        		if(commands.length > 1){
+        			System.out.println("error processing: " + commandLine);
+    				break;
+        		}
         		Critter.displayWorld();
         		break;
         	case "step":
-        		if(kb.hasNextInt()){
-        			cycles = kb.nextInt();
+        		if(commands.length > 1){
+        			try{
+        				cycles = Integer.parseInt(commands[1]);
+        			}
+        			catch(Exception e){
+        				System.out.println("error processing: " + commandLine);
+        				break;
+        			}
+        		}
+        		if(commands.length > 2){
+        			System.out.println("error processing: " + commandLine);
+    				break;
         		}
         		for(int i = 0; i < cycles; i++){
         			Critter.worldTimeStep();
         		}
         		break;
         	case "seed":
-        		long seed = kb.nextInt();
-        		Critter.setSeed(seed);
-        		break;
-        	case "make":
-        		String className =kb.next();
-        		if(kb.hasNextInt()){
-        			cycles = kb.nextInt();
+        		if(commands.length != 2){
+        			System.out.println("error processing: " + commandLine);
+    				break;
         		}
+        		try{
+        			long seed = Long.parseLong(commands[1]);
+        			Critter.setSeed(seed);
+            		break;
+        		}
+        		catch(Exception e){
+    				System.out.println("error processing: " + commandLine);
+    				break;
+    			}
+        	case "make":
+        		if(commands.length > 3 || commands.length < 2){
+        			System.out.println("error processing: " + commandLine);
+    				break;
+        		}
+        		String className = commands[1];
+        		
+        		if(commands.length > 2){
+        			try{
+        				cycles = Integer.parseInt(commands[2]);
+        			}
+        			catch(Exception e){
+        				System.out.println("error processing: " + commandLine);
+        				break;
+        			}
+        		}
+        		
         		for(int i = 0; i < cycles; i++){
         			try {
 						Critter.makeCritter(className);
 					} catch (InvalidCritterException e) {
-						e.printStackTrace();
+						System.out.println("error processing: " + commandLine);
+						break;
 					}
         		}
         		break;
+        	case "stats":
+        		if(commands.length != 2){
+        			System.out.println("error processing: " + commandLine);
+    				break;
+        		}
+        		String statName = commands[1];
+        		try {
+					List<Critter> statList = Critter.getInstances(statName);
+					Critter.runStats(statList);
+				} catch (InvalidCritterException e) {
+					System.out.println("error processing: " + commandLine);
+				}
+        		break;
         	default:
+        		System.out.println("invalid command: " + commandLine);
         	}
         }
         
