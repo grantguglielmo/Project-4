@@ -39,9 +39,7 @@ public abstract class Critter {
 	public static void setSeed(long new_seed) {
 		rand = new java.util.Random(new_seed);
 	}
-	
-	
-	
+
 	/*
 	 * a one-character long string that visually depicts your critter in the
 	 * ASCII interface
@@ -60,42 +58,42 @@ public abstract class Critter {
 	private int y_coord;
 
 	protected final void walk(int direction) {
-		switch(direction){//move critter based on direction
-		case 0:																//directions:
-			this.x_coord = (this.x_coord + 1) % Params.world_width;			//	3 2 1
-			break;															//	4 * 0
-		case 1:																//	5 6 7
+		switch (direction) {// move critter based on direction
+		case 0: // directions:
+			this.x_coord = (this.x_coord + 1) % Params.world_width; // 3 2 1
+			break; // 4 * 0
+		case 1: // 5 6 7
 			this.x_coord = (this.x_coord + 1) % Params.world_width;
 			this.y_coord--;
-			if(this.y_coord < 0){
+			if (this.y_coord < 0) {
 				this.y_coord = Params.world_height - 1;
 			}
 			break;
 		case 2:
 			this.y_coord--;
-			if(this.y_coord < 0){
+			if (this.y_coord < 0) {
 				this.y_coord = Params.world_height - 1;
 			}
 			break;
 		case 3:
 			this.x_coord--;
-			if(this.x_coord < 0){
+			if (this.x_coord < 0) {
 				this.x_coord = Params.world_width - 1;
 			}
 			this.y_coord--;
-			if(this.y_coord < 0){
+			if (this.y_coord < 0) {
 				this.y_coord = Params.world_height - 1;
 			}
 			break;
 		case 4:
 			this.x_coord--;
-			if(this.x_coord < 0){
+			if (this.x_coord < 0) {
 				this.x_coord = Params.world_width - 1;
 			}
 			break;
 		case 5:
 			this.x_coord--;
-			if(this.x_coord < 0){
+			if (this.x_coord < 0) {
 				this.x_coord = Params.world_width - 1;
 			}
 			this.y_coord = (this.y_coord + 1) % Params.world_height;
@@ -112,7 +110,7 @@ public abstract class Critter {
 	}
 
 	protected final void run(int direction) {
-		this.walk(direction);//move critter in given direction twice
+		this.walk(direction);// move critter in given direction twice
 		this.walk(direction);
 		this.energy -= (Params.run_energy_cost - (2 * Params.walk_energy_cost));
 	}
@@ -139,9 +137,14 @@ public abstract class Critter {
 		Critter makeCritter;
 		try {
 			@SuppressWarnings("rawtypes")
-			Class testClass = Class.forName(critter_class_name);//sets testClass to critter_class_name
-			makeCritter = (Critter) testClass.newInstance();//runs default constructor for testClass
-		} catch (Exception e) {//catch any errors and throw invalid critter exception
+			Class testClass = Class.forName(critter_class_name);// sets
+																// testClass to
+																// critter_class_name
+			makeCritter = (Critter) testClass.newInstance();// runs default
+															// constructor for
+															// testClass
+		} catch (Exception e) {// catch any errors and throw invalid critter
+								// exception
 			throw new InvalidCritterException(critter_class_name);
 		}
 		makeCritter.x_coord = getRandomInt(Params.world_width);
@@ -160,9 +163,9 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		for(Critter c : population){
+		for (Critter c : population) {
 			try {
-				if(c.getClass().equals(Class.forName(critter_class_name))){
+				if (c.getClass().equals(Class.forName(critter_class_name))) {
 					result.add(c);
 				}
 			} catch (Exception e) {
@@ -260,28 +263,58 @@ public abstract class Critter {
 	}
 
 	public static void worldTimeStep() {
-		ArrayList<EncounterPair> encounters = new ArrayList<EncounterPair>();
+		EncounterList collisions = new EncounterList();
 		int[][] location = new int[Params.world_height][Params.world_width];
-		for(int i = 0; i < population.size(); i++){
+		for (int i = 0; i < population.size(); i++) {
 			Critter c = population.get(i);
 			c.doTimeStep();
-			int indexCheck = location[c.y_coord][c.x_coord];//checks if c just moved into a position occupied by a critter
-			if(indexCheck != 0){							//that has already initiated doTimeStep
-				if(indexCheck == -1){						//adds the 2 critters into a list
+			int indexCheck = location[c.y_coord][c.x_coord];// checks if c just
+															// moved into a
+															// position occupied
+															// by a critter
+			if (indexCheck != 0) { // that has already initiated doTimeStep
+				if (indexCheck == -1) { // adds the 2 critters into a list
 					indexCheck = 0;
 				}
-				EncounterPair pair = new EncounterPair(population.get(indexCheck),c);
-				encounters.add(pair);
-			}
-			else{//records index of c into location in matrix 
+				collisions.add(c.x_coord, c.y_coord, population.get(indexCheck), c);
+			} else {// records index of c into location in matrix
 				int j = i;
-				if(j == 0){
+				if (j == 0) {
 					j = -1;
 				}
 				location[c.y_coord][c.x_coord] = j;
 			}
 		}
-		//TODO deal with 2 critters in same spot
+		for (int i = 0; i < Params.world_height * Params.world_width; i++) {
+			ArrayList<Critter> currentSpot = collisions.encounters.get(i);
+			if (currentSpot != null) {
+				while (currentSpot.size() > 1) {
+					Critter a = currentSpot.get(0);
+					Critter b = currentSpot.get(1);
+					boolean aFight = a.fight(b.toString());
+					boolean bFight = b.fight(a.toString());
+					if (((bFight && aFight)||(a.x_coord == b.x_coord && a.y_coord == b.y_coord)) && (b.energy > 0 && a.energy > 0)) {
+						int aRoll = Critter.getRandomInt(a.energy);
+						int bRoll = Critter.getRandomInt(a.energy);
+						if (aRoll >= bRoll) {
+							a.energy += b.energy / 2;
+							b.energy = 0;
+							currentSpot.remove(1);
+						} else {
+							b.energy += a.energy / 2;
+							a.energy = 0;
+							currentSpot.remove(0);
+						}
+					}
+					else if(!aFight){
+						
+					}
+					else{
+						
+					}
+				}
+			}
+		}
 	}
 
 	public static void displayWorld() {
