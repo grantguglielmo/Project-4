@@ -90,6 +90,10 @@ public class Main {
         		Critter.displayWorld();
         		break;
         	case "step":
+        		if(commands.length > 2){
+        			System.out.println("error processing: " + commandLine);
+    				break;
+        		}
         		if(commands.length > 1){
         			try{
         				cycles = Integer.parseInt(commands[1]);
@@ -98,10 +102,6 @@ public class Main {
         				System.out.println("error processing: " + commandLine);
         				break;
         			}
-        		}
-        		if(commands.length > 2){
-        			System.out.println("error processing: " + commandLine);
-    				break;
         		}
         		for(int i = 0; i < cycles; i++){
         			Critter.worldTimeStep();
@@ -127,7 +127,6 @@ public class Main {
     				break;
         		}
         		String className = commands[1];
-        		
         		if(commands.length > 2){
         			try{
         				cycles = Integer.parseInt(commands[2]);
@@ -137,7 +136,6 @@ public class Main {
         				break;
         			}
         		}
-        		
         		for(int i = 0; i < cycles; i++){
         			try {
 						Critter.makeCritter(className);

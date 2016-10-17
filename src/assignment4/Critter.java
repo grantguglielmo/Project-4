@@ -267,6 +267,8 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
+		population.clear();
+		babies.clear();
 	}
 
 	public static void worldTimeStep() {
@@ -292,19 +294,35 @@ public abstract class Critter {
 				location[c.y_coord][c.x_coord] = j;
 			}
 		}
-		for (int i = 0; i < Params.world_height * Params.world_width; i++) {
+		for (int i = 0; i < Params.world_height * Params.world_width; i++) {//resolve encounters
 			ArrayList<Critter> currentSpot = collisions.encounters.get(i);
 			if (currentSpot != null) {
 				while (currentSpot.size() > 1) {
 					Critter a = currentSpot.get(0);
 					Critter b = currentSpot.get(1);
-					boolean aFight = a.fight(b.toString());
-					boolean bFight = b.fight(a.toString());
 					int oldX = a.x_coord;
 					int oldY = a.y_coord;
-					if (((bFight && aFight)||(a.x_coord == b.x_coord && a.y_coord == b.y_coord)) && (b.energy > 0 && a.energy > 0)) {
+					boolean aFight = a.fight(b.toString());
+					boolean bFight = b.fight(a.toString());
+					if(a.energy == 0){
+						currentSpot.remove(0);
+						if(b.energy == 0){
+							currentSpot.remove(1);
+						}
+						
+					}
+					else if(b.energy == 0){
+						currentSpot.remove(1);
+					}
+					else if ((bFight && aFight)||(a.x_coord == b.x_coord && a.y_coord == b.y_coord)) {
 						int aRoll = Critter.getRandomInt(a.energy);
+						if(!aFight){
+							aRoll = 0;
+						}
 						int bRoll = Critter.getRandomInt(a.energy);
+						if(!bFight){
+							bRoll = 0;
+						}
 						if (aRoll >= bRoll) {
 							a.energy += b.energy / 2;
 							b.energy = 0;
@@ -319,6 +337,12 @@ public abstract class Critter {
 						if(bFight){
 							currentSpot.remove(0);
 						}
+						else if(a.x_coord != oldX || a.y_coord != oldY){
+							currentSpot.remove(0);
+						}
+						else{
+							currentSpot.remove(1);
+						}
 					}
 					else {
 						currentSpot.remove(1);
@@ -330,6 +354,7 @@ public abstract class Critter {
 		for(Critter babe : babies){
 			population.add(babe);
 		}
+		babies.clear();
 		for(int i = 0; i < Params.refresh_algae_count; i++){
 			try {
 				makeCritter(myPackage + ".Algae");
