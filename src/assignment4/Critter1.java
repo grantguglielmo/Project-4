@@ -11,9 +11,8 @@
  */
 package assignment4;
 
-import assignment4.Critter.TestCritter;
 
-public class Critter1 extends TestCritter{
+public class Critter1 extends Critter{
 	
 	private int[] dir;
 	
