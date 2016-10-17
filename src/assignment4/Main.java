@@ -13,6 +13,7 @@ package assignment4; // cannot be in default package
 import java.util.List;
 import java.util.Scanner;
 import java.io.*;
+import java.lang.reflect.Method;
 
 
 /*
@@ -153,8 +154,13 @@ public class Main {
         		String statName = commands[1];
         		try {
 					List<Critter> statList = Critter.getInstances(statName);
-					Critter.runStats(statList);
-				} catch (InvalidCritterException e) {
+					Class<?>[] types = {List.class};
+					@SuppressWarnings("rawtypes")
+					Class testClass = Class.forName(myPackage + "." + statName);
+					@SuppressWarnings("unchecked")
+					Method stat = testClass.getMethod("runStats",types);
+					stat.invoke(null, statList);
+				} catch (Exception e) {
 					System.out.println("error processing: " + commandLine);
 				}
         		break;

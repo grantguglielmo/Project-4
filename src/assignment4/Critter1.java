@@ -16,6 +16,10 @@ public class Critter1 extends Critter{
 	
 	private int[] dir;
 	
+	public String toString(){
+		return "$";
+	}
+	
 	public Critter1(){
 		dir = new int[3];
 		dir[0] = Critter.getRandomInt(8);
