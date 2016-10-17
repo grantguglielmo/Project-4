@@ -6,6 +6,7 @@
  * <Student2 Name>
  * <Student2 EID>
  * <Student2 5-digit Unique No.>
+ * GitHub URL: https://github.com/grantguglielmo/Project-4
  * Slip days used: 0
  * Fall 2016
  */
