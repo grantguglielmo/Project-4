@@ -357,7 +357,7 @@ public abstract class Critter {
 		babies.clear();
 		for(int i = 0; i < Params.refresh_algae_count; i++){
 			try {
-				makeCritter(myPackage + ".Algae");
+				makeCritter("Algae");
 			} catch (InvalidCritterException e) {
 				e.printStackTrace();
 			}
@@ -376,10 +376,10 @@ public abstract class Critter {
 	public static void displayWorld() {
 		int[][] indexMatrix = new int[Params.world_height][Params.world_width];
 		if(population.size() > 0){
-			indexMatrix[population.get(0).y_coord][population.get(0).y_coord] = -1;
+			indexMatrix[population.get(0).y_coord][population.get(0).x_coord] = -1;
 		}
 		for(int i = 1; i < population.size(); i++){
-			indexMatrix[population.get(i).y_coord][population.get(i).y_coord] = i;
+			indexMatrix[population.get(i).y_coord][population.get(i).x_coord] = i;
 		}
 		System.out.print("\n+");
 		for(int i = 0; i < Params.world_width; i++){
