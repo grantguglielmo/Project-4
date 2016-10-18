@@ -6,7 +6,6 @@
  * Mohit Joshi
  * msj696
  * 16475
- * GitHub URL: https://github.com/grantguglielmo/Project-4
  * Slip days used: 0
  * Fall 2016
  */
