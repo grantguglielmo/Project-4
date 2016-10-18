@@ -37,7 +37,7 @@ public class Critter4 extends Critter {
 	public void doTimeStep() {
 		int temp = Critter.getRandomInt(8);
 		if(temp%2 == 1) {
-			if(diagonal) {
+			if(diagonal) {				//check if critter moved diagonally last time step
 				walk((temp+1)&8);
 				
 			}
@@ -53,16 +53,16 @@ public class Critter4 extends Critter {
 				walk((temp+1)&8);
 			}
 		}
-		diagonal = !diagonal;
+		diagonal = !diagonal;			//toggle flag to alternate every time step
 	}
 	
 	@Override
 	public boolean fight(String oponent) {
 		if(oponent == "1") {
-			run(Critter.getRandomInt(8));
+			run(Critter.getRandomInt(8));	//run away if fighting critter 1
 			return false;
 		}
 		else
-			return true;
+			return true;					//otherwise, stay and fight
 	}
 }
