@@ -327,6 +327,7 @@ public abstract class Critter {
 		for (int i = 0; i < population.size(); i++) {
 			Critter c = population.get(i);
 			c.doTimeStep();
+			c.energy -= Params.rest_energy_cost;
 			int indexCheck = location[c.y_coord][c.x_coord];// checks if c just
 															// moved into a
 															// position occupied

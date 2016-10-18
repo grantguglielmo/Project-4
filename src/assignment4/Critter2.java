@@ -51,7 +51,7 @@ public class Critter2 extends TestCritter{
 			run(Critter.getRandomInt(8));
 		}
 		else{//critter will rest
-			this.setEnergy(getEnergy() - Params.rest_energy_cost);
+			return;
 		}
 	}
 	/**
