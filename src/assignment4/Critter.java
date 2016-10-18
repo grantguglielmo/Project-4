@@ -136,11 +136,9 @@ public abstract class Critter {
 		if(stepOver){
 			int oldX = this.x_coord;
 			int oldY = this.y_coord;
+			stepOver = false;
 			this.walk(direction);// move critter in given direction twice
-			if(this.x_coord == oldX && this.y_coord == oldY){
-				this.energy -= (Params.run_energy_cost - (Params.walk_energy_cost));
-				return;
-			}
+			stepOver = true;
 			int medX = this.x_coord;
 			int medY = this.y_coord;
 			moved = false;
