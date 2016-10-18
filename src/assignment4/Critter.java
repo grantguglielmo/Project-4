@@ -119,7 +119,7 @@ public abstract class Critter {
 			if(stepOver){
 				for(Critter c : population){
 					if(this != c){
-						if(this.x_coord == c.x_coord && this.y_coord == c.y_coord){
+						if(this.x_coord == c.x_coord && this.y_coord == c.y_coord && c.energy > 0){
 							this.x_coord = oldX;
 							this.y_coord = oldY;
 							break;
