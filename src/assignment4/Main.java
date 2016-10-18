@@ -3,9 +3,9 @@
  * Grant Guglielmo
  * gg25488
  * 16470
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * Mohit Joshi
+ * msj696
+ * 16475
  * GitHub URL: https://github.com/grantguglielmo/Project-4
  * Slip days used: 0
  * Fall 2016
