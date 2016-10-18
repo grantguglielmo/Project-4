@@ -164,8 +164,12 @@ public abstract class Critter {
 		}
 		int lowerHalf = this.energy / 2;
 		offspring.energy = lowerHalf + Params.walk_energy_cost;
+		offspring.moved = false;
 		this.energy = this.energy - lowerHalf;
+		boolean hold = stepOver;
+		stepOver = false;
 		offspring.walk(direction);
+		stepOver = hold;
 		babies.add(offspring);
 	}
 
@@ -392,6 +396,7 @@ public abstract class Critter {
 				}
 			}
 		}
+		stepOver = false;
 		kill();
 		for (Critter babe : babies) {
 			population.add(babe);
@@ -408,26 +413,32 @@ public abstract class Critter {
 			c.moved = false;
 		}
 	}
-
+	/**
+	 * remove all dead bugs from population
+	 */
 	private static void kill() {
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < population.size(); i++) {//remove any bug with energy <= 0
 			if (population.get(i).energy < 1) {
 				population.remove(i);
 				i--;
 			}
 		}
 	}
-
+	
+	/**
+	 * displays the torus world that the critters live in by representing
+	 * it as a grid. display each critter as their toString().
+	 */
 	public static void displayWorld() {
 		int[][] indexMatrix = new int[Params.world_height][Params.world_width];
 		if (population.size() > 0) {
-			indexMatrix[population.get(0).y_coord][population.get(0).x_coord] = -1;
+			indexMatrix[population.get(0).y_coord][population.get(0).x_coord] = -1;//create matrix with every critter stored
 		}
 		for (int i = 1; i < population.size(); i++) {
-			indexMatrix[population.get(i).y_coord][population.get(i).x_coord] = i;
+			indexMatrix[population.get(i).y_coord][population.get(i).x_coord] = i;//as their index, index 0 is -1 though
 		}
 		System.out.print("\n+");
-		for (int i = 0; i < Params.world_width; i++) {
+		for (int i = 0; i < Params.world_width; i++) {//display grid using matrix above
 			System.out.print("-");
 		}
 		System.out.print("+\n");
@@ -439,7 +450,7 @@ public abstract class Critter {
 				} else if (indexMatrix[i][j] == -1) {
 					System.out.print(population.get(0).toString());
 				} else {
-					System.out.print(population.get(indexMatrix[i][j]).toString());
+					System.out.print(population.get(indexMatrix[i][j]).toString());//call toString() to get representation of the critter
 				}
 			}
 			System.out.print("|\n");
