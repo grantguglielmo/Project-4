@@ -58,7 +58,7 @@ public class Critter4 extends Critter {
 	
 	@Override
 	public boolean fight(String oponent) {
-		if(oponent == "1") {
+		if(oponent.equals("1")) {
 			run(Critter.getRandomInt(8));	//run away if fighting critter 1
 			return false;
 		}

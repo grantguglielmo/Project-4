@@ -374,9 +374,16 @@ public abstract class Critter {
 							bRoll = 0;
 						}
 						if (aRoll >= bRoll) {
+							if(a.toString().equals("@")){
+								b.energy += a.energy / 2;
+								a.energy = 0;
+								currentSpot.remove(0);
+							}
+							else{
 							a.energy += b.energy / 2;
 							b.energy = 0;
 							currentSpot.remove(1);
+							}
 						} else {
 							b.energy += a.energy / 2;
 							a.energy = 0;
@@ -387,6 +394,9 @@ public abstract class Critter {
 							currentSpot.remove(0);
 						} else if (a.x_coord != oldX || a.y_coord != oldY) {
 							currentSpot.remove(0);
+							if(b.x_coord != oldX || b.y_coord != oldY){
+								currentSpot.remove(1);
+							}
 						} else {
 							currentSpot.remove(1);
 						}
