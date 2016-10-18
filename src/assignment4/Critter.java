@@ -191,8 +191,7 @@ public abstract class Critter {
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		Critter makeCritter;
 		try {
-			@SuppressWarnings("rawtypes")
-			Class testClass = Class.forName(myPackage + "." + critter_class_name);// sets
+			Class<?> testClass = Class.forName(myPackage + "." + critter_class_name);// sets
 			// testClass to
 			// critter_class_name
 			makeCritter = (Critter) testClass.newInstance();// runs default

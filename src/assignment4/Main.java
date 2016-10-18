@@ -27,7 +27,8 @@ public class Main {
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
     private static String myPackage;	// package of Critter file.  Critter cannot be in default pkg.
-    private static boolean DEBUG = false; // Use it or not, as you wish!
+    @SuppressWarnings("unused")
+	private static boolean DEBUG = false; // Use it or not, as you wish!
     static PrintStream old = System.out;	// if you want to restore output to console
 
 
@@ -155,9 +156,7 @@ public class Main {
         		try {
 					List<Critter> statList = Critter.getInstances(statName);
 					Class<?>[] types = {List.class};
-					@SuppressWarnings("rawtypes")
-					Class testClass = Class.forName(myPackage + "." + statName);
-					@SuppressWarnings("unchecked")
+					Class<?> testClass = Class.forName(myPackage + "." + statName);
 					Method stat = testClass.getMethod("runStats",types);
 					stat.invoke(null, statList);
 				} catch (Exception e) {

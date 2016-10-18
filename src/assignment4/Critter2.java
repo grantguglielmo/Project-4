@@ -11,7 +11,6 @@
  */
 package assignment4;
 
-import assignment4.Critter.TestCritter;
 /**
  * Critter2 will randomly decide to either walk run or rest during a given doTimestep.
  * Critter2's preference on running or resting is decided by a random value picked at construction.
@@ -21,7 +20,7 @@ import assignment4.Critter.TestCritter;
  * and are given their parents runChance value. The Critter2 will then stay and fight
  * once it has exhausted its reproduction potential.
  */
-public class Critter2 extends TestCritter{
+public class Critter2 extends Critter{
 	
 	private int runChance;
 	/**
