@@ -17,7 +17,7 @@ public class Critter1 extends Critter{
 	private int[] dir;
 	
 	public String toString(){
-		return "$";
+		return "1";
 	}
 	
 	public Critter1(){

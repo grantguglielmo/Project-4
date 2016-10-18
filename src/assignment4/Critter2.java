@@ -18,7 +18,7 @@ public class Critter2 extends TestCritter{
 	private int runChance;
 	
 	public String toString(){
-		return "G";
+		return "2";
 	}
 	
 	public Critter2(){
