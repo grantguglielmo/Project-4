@@ -56,6 +56,8 @@ public class Critter3 extends Critter {
 	
 	@Override
 	public boolean fight(String oponent) {
+		if(!babies)
+			run(Critter.getRandomInt(8));
 		return babies;				//fight if critter reproduced during this time step
 	}
 }
