@@ -72,7 +72,7 @@ public class Main {
         /* Write your code below. */
         boolean cont = true;
         while(cont){
-        	System.out.print("critters> ");
+        	System.out.print("critters>");
         	String commandLine = kb.nextLine();
         	String[] commands = commandLine.split(" ");
         	int cycles = 1;

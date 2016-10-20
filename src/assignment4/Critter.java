@@ -357,7 +357,7 @@ public abstract class Critter {
 					if (a.energy <= 0) {
 						currentSpot.remove(0);
 						if (b.energy <= 0) {
-							currentSpot.remove(1);
+							currentSpot.remove(0);
 						}
 
 					} else if (b.energy <= 0) {
@@ -393,7 +393,7 @@ public abstract class Critter {
 						} else if (a.x_coord != oldX || a.y_coord != oldY) {
 							currentSpot.remove(0);
 							if(b.x_coord != oldX || b.y_coord != oldY){
-								currentSpot.remove(1);
+								currentSpot.remove(0);
 							}
 						} else {
 							currentSpot.remove(1);

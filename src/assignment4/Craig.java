@@ -1,8 +1,5 @@
 package assignment4;
 
-/*
- * Example critter
- */
 public class Craig extends Critter {
 	
 	@Override
