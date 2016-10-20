@@ -71,66 +71,66 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         boolean cont = true;
-        while(cont){
-        	System.out.print("critters>");
+        while(cont){//continue readin inputs until user inputs quit
+        	System.out.print("critters>");//display command prompt
         	String commandLine = kb.nextLine();
-        	String[] commands = commandLine.split(" ");
+        	String[] commands = commandLine.split(" ");//split command into array
         	int cycles = 1;
-        	switch(commands[0]){
+        	switch(commands[0]){//switch to find command
         	case "quit":
-        		if(commands.length > 1){
+        		if(commands.length > 1){//error if any arguments
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
-        		cont = false;
+        		cont = false;//exit program
         		break;
         	case "show":
-        		if(commands.length > 1){
+        		if(commands.length > 1){//error if any arguments
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
-        		Critter.displayWorld();
+        		Critter.displayWorld();//display critters in a grid
         		break;
         	case "step":
-        		if(commands.length > 2){
+        		if(commands.length > 2){//error if 3 or more arguments
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
-        		if(commands.length > 1){
+        		if(commands.length > 1){//check if any arguments for number of steps, default to 1
         			try{
         				cycles = Integer.parseInt(commands[1]);
         			}
-        			catch(Exception e){
+        			catch(Exception e){//error if not integer
         				System.out.println("error processing: " + commandLine);
         				break;
         			}
         		}
-        		for(int i = 0; i < cycles; i++){
+        		for(int i = 0; i < cycles; i++){//loop through specified number of time steps
         			Critter.worldTimeStep();
         		}
         		break;
         	case "seed":
-        		if(commands.length != 2){
+        		if(commands.length != 2){//error if not 1 argument
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
         		try{
-        			long seed = Long.parseLong(commands[1]);
+        			long seed = Long.parseLong(commands[1]);//seed random number generator
         			Critter.setSeed(seed);
             		break;
         		}
-        		catch(Exception e){
+        		catch(Exception e){//error if not integer
     				System.out.println("error processing: " + commandLine);
     				break;
     			}
         	case "make":
-        		if(commands.length > 3 || commands.length < 2){
+        		if(commands.length > 3 || commands.length < 2){//error if not 1-2 arguments
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
         		String className = commands[1];
         		if(commands.length > 2){
-        			try{
+        			try{//check if second argument is integer
         				cycles = Integer.parseInt(commands[2]);
         			}
         			catch(Exception e){
@@ -138,7 +138,7 @@ public class Main {
         				break;
         			}
         		}
-        		for(int i = 0; i < cycles; i++){
+        		for(int i = 0; i < cycles; i++){//make specified number of critters of specififed type
         			try {
 						Critter.makeCritter(className);
 					} catch (InvalidCritterException e) {
@@ -148,12 +148,12 @@ public class Main {
         		}
         		break;
         	case "stats":
-        		if(commands.length != 2){
+        		if(commands.length != 2){//error if not 1 argument 
         			System.out.println("error processing: " + commandLine);
     				break;
         		}
         		String statName = commands[1];
-        		try {
+        		try {//call static method of specified class
 					List<Critter> statList = Critter.getInstances(statName);
 					Class<?>[] types = {List.class};
 					Class<?> testClass = Class.forName(myPackage + "." + statName);
@@ -163,7 +163,7 @@ public class Main {
 					System.out.println("error processing: " + commandLine);
 				}
         		break;
-        	default:
+        	default://not a valid command inputed
         		System.out.println("invalid command: " + commandLine);
         	}
         }
