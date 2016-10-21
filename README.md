@@ -1,18 +1,18 @@
 # Project-4
 Grant Guglielmo gg25488
 Mohit Joshi msj696
+Git URL: https://github.com/grantguglielmo/Project-4
 Critters project
-
 During each step of our program, we call worldTimeStep() in which doTimeStep() is called for every Critter in the population, then all encounters between bugs are resolved with fight() being called for every Critter that encountered another Critter, then all babies are added to the population, then all dead bugs are removed from the population, and finally algae is added to the population.
 
 This program is controlled by a command line interface, with all commands shown below
 Commands:
     make <Critter class> [<# to make>]      create Critters of specified class and add them to the population, default to 1
-    quit                                    exit program
-    show                                    display world grid of all critters
-    stats <Critter class>                   display all stats for the specified Critter class
-    step [<# of steps>]                     call worldstep specified number of times, default to 1
-    seed <Seed number>                      seed random number generator
+    quit                                           exit program
+    show                                           display world grid of all critters
+    stats <Critter class>                          display all stats for the specified Critter class
+    step [<# of steps>]                            call worldstep specified number of times, default to 1
+    seed <Seed number>                       seed random number generator
 
 Our Critter population is stored in a private static List<Critter> within the class Critter, along with our babies popluation.
 We created the classes Critter1, Critter2, Critter3, Critter4 and EncounterList.
