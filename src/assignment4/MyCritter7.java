@@ -18,4 +18,10 @@ public class MyCritter7 extends TestCritter {
 	public String toString () {
 		return "7";
 	}
+
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

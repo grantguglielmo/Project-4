@@ -22,4 +22,10 @@ public class MyCritter1 extends Critter.TestCritter {
 	public void test (List<Critter> l) {
 		
 	}
+
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

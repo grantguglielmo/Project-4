@@ -62,12 +62,21 @@ public class Critter2 extends Critter{
 		if(oponent.equals("@")){//fight immediately if algae
 			return true;
 		}
+		String chk = this.look(Critter.getRandomInt(8), false);
+		if(chk != null && chk.equals("2")){
+			return true;
+		}
 		while(getEnergy() > Params.min_reproduce_energy){//critter just spams area with babies then kills itself
 			Critter2 child = new Critter2();//continue reproducing untill out of energy
 			child.runChance = this.runChance;
 			this.reproduce(child, Critter.getRandomInt(8));
 		}
 		return true;//stay and fight
+	}
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

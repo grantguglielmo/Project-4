@@ -67,5 +67,10 @@ public class Critter1 extends Critter{
 	public boolean fight(String oponent) {
 		return true;//never back down
 	}
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

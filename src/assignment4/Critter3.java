@@ -47,8 +47,12 @@ public class Critter3 extends Critter {
 			prev = -1;
 		}
 		else
-		{
-			walk(temp);
+		{	
+			String lookNext = this.look(temp, false);
+			if(lookNext == null)
+				walk(temp);
+			else
+				walk(Critter.getRandomInt(8));
 			babies = false;
 			prev = (temp+4)%8;		//set prev to opposite of walking direction
 		}
@@ -59,5 +63,11 @@ public class Critter3 extends Critter {
 		if(!babies)
 			run(Critter.getRandomInt(8));
 		return babies;				//fight if critter reproduced during this time step
+	}
+
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

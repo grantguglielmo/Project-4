@@ -65,4 +65,10 @@ public class Critter4 extends Critter {
 		else
 			return true;					//otherwise, stay and fight
 	}
+
+	@Override
+	public CritterShape viewShape() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

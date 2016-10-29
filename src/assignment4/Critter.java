@@ -1,4 +1,4 @@
-/* CRITTERS Critter.java
+/* CRITTERS GUI Critter.java
  * EE422C Project 4 submission by
  * Grant Guglielmo
  * gg25488
@@ -19,6 +19,35 @@ import java.util.*;
  */
 
 public abstract class Critter {
+	/* NEW FOR PROJECT 5 */
+	public enum CritterShape {
+		CIRCLE,
+		SQUARE,
+		TRIANGLE,
+		DIAMOND,
+		STAR
+	}
+	
+	/* the default color is white, which I hope makes critters invisible by default
+	 * If you change the background color of your View component, then update the default
+	 * color to be the same as you background 
+	 * 
+	 * critters must override at least one of the following three methods, it is not 
+	 * proper for critters to remain invisible in the view
+	 * 
+	 * If a critter only overrides the outline color, then it will look like a non-filled 
+	 * shape, at least, that's the intent. You can edit these default methods however you 
+	 * need to, but please preserve that intent as you implement them. 
+	 */
+	public javafx.scene.paint.Color viewColor() { 
+		return javafx.scene.paint.Color.WHITE; 
+	}
+	
+	public javafx.scene.paint.Color viewOutlineColor() { return viewColor(); }
+	public javafx.scene.paint.Color viewFillColor() { return viewColor(); }
+	
+	public abstract CritterShape viewShape(); 
+	
 	private static String myPackage;
 	private static List<Critter> population = new java.util.ArrayList<Critter>();//arraylist to hold all living critters
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();//array for babies that havent been added to population yet
@@ -29,7 +58,73 @@ public abstract class Critter {
 	static {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
 	}
-
+	
+	protected String look(int direction, boolean steps) {
+		int x = this.x_start;
+		int y = this.y_start;
+		int loops = 1;
+		if(steps){
+			loops = 2;
+		}
+		for(int i = 0; i < loops; i++){
+		switch (direction) {// move critter based on direction
+		case 0: //grid is a torus so critters will wrap around
+			x = (x + 1) % Params.world_width;
+			break;
+		case 1:
+			x = (x + 1) % Params.world_width;
+			y--;
+			if (y < 0) {
+				y = Params.world_height - 1;
+			}
+			break;
+		case 2:
+			y--;
+			if (y < 0) {
+				y = Params.world_height - 1;
+			}
+			break;
+		case 3:
+			x--;
+			if (x< 0) {
+				x= Params.world_width - 1;
+			}
+			y--;
+			if (y < 0) {
+				y = Params.world_height - 1;
+			}
+			break;
+		case 4:
+			x--;
+			if (x < 0) {
+				x= Params.world_width - 1;
+			}
+			break;
+		case 5:
+			x--;
+			if (x < 0) {
+				x = Params.world_width - 1;
+			}
+			y = (y + 1) % Params.world_height;
+			break;
+		case 6:
+			y = (y+ 1) % Params.world_height;
+			break;
+		case 7:
+			x = (x + 1) % Params.world_width;
+			y = (y+ 1) % Params.world_height;
+			break;
+		}
+		}
+		this.energy -= Params.look_energy_cost;
+		for(Critter c : population){
+			if(c.x_start == x && c.y_start == y && c.energy > 0){
+				return c.toString();
+			}
+		}
+		return null;
+	}
+	
 	private static java.util.Random rand = new java.util.Random();
 
 	public static int getRandomInt(int max) {
@@ -53,9 +148,10 @@ public abstract class Critter {
 	protected int getEnergy() {
 		return energy;
 	}
-
 	private int x_coord;
 	private int y_coord;
+	private int x_start = x_coord;
+	private int y_start = y_coord;
 	private boolean moved;
 	/**
 	 * move critter in specififed direction, wont move critter if it has already moved this time step.
@@ -213,6 +309,8 @@ public abstract class Critter {
 		}
 		makeCritter.x_coord = getRandomInt(Params.world_width);//give critter random starting location
 		makeCritter.y_coord = getRandomInt(Params.world_height);
+		makeCritter.x_start = makeCritter.x_coord;
+		makeCritter.y_start = makeCritter.y_coord;
 		makeCritter.energy = Params.start_energy;
 		makeCritter.moved = false;
 		population.add(makeCritter);//add critter to population
@@ -357,6 +455,10 @@ public abstract class Critter {
 				location[c.y_coord][c.x_coord] = j;
 			}
 		}
+		for(Critter c : population){
+			c.x_start = c.x_coord;
+			c.y_start = c.y_coord;
+		}
 		stepOver = true;//encounters stage
 		for (int i = 0; i < Params.world_height * Params.world_width; i++) {// resolve
 																			// encounters
@@ -453,6 +555,7 @@ public abstract class Critter {
 	 * it as a grid. display each critter as their toString().
 	 */
 	public static void displayWorld() {
+		if(Main.DEBUG){
 		int[][] indexMatrix = new int[Params.world_height][Params.world_width];
 		if (population.size() > 0) {
 			indexMatrix[population.get(0).y_coord][population.get(0).x_coord] = -1;//create matrix with every critter stored
@@ -483,5 +586,11 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.print("+\n");
+	}
+		else{
+			for(Critter c : population){
+				Main.write(c, c.x_coord, c.y_coord);
+			}
+		}
 	}
 }
