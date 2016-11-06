@@ -10,6 +10,9 @@
  * Fall 2016
  */
 package assignment4;
+
+import assignment4.Critter.CritterShape;
+
 /**
  * Critter1 runs in a random direction every doTimestep, where the directions is picked form an array 
  * of size 3 with 3 random directions stored inside. This array is initialized with random values in its default constructor.
@@ -68,9 +71,8 @@ public class Critter1 extends Critter{
 		return true;//never back down
 	}
 	@Override
-	public CritterShape viewShape() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public CritterShape viewShape() { return CritterShape.TRIANGLE; }
+	@Override
+	public javafx.scene.paint.Color viewColor() { return javafx.scene.paint.Color.PURPLE; }
 	
 }

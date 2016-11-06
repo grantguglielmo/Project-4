@@ -239,12 +239,13 @@ public abstract class Critter {
 		if(stepOver){//check if encounters stage
 			int oldX = this.x_coord;
 			int oldY = this.y_coord;
+			boolean flag = this.moved;
 			stepOver = false;//critter can run past other critters so allow critter overlap during first walk
 			this.walk(direction);// move critter in given direction twice
 			stepOver = true;
 			int medX = this.x_coord;//dont allow critter overlap during second walk
 			int medY = this.y_coord;
-			moved = false;
+			moved = flag;
 			this.walk(direction);
 			if(this.x_coord == medX && this.y_coord == medY){//check if critter moved 2 spaces away, revert to original if it didnt move
 				this.x_coord = oldX;
@@ -253,8 +254,9 @@ public abstract class Critter {
 			this.energy -= (Params.run_energy_cost - (2 * Params.walk_energy_cost));//subtract run energy
 			return;
 		}
+		boolean flag0 = this.moved;
 		this.walk(direction);// move critter in given direction twice
-		moved = false;//unmark critter as having moved so it can walk again, will be marked moved after next walk
+		moved = flag0;//unmark critter as having moved so it can walk again, will be marked moved after next walk
 		this.walk(direction);
 		this.energy -= (Params.run_energy_cost - (2 * Params.walk_energy_cost));//add back walk energy then subtract run energy
 	}

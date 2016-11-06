@@ -11,6 +11,8 @@
  */
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 /**
  * Critter2 will randomly decide to either walk run or rest during a given doTimestep.
  * Critter2's preference on running or resting is decided by a random value picked at construction.
@@ -74,9 +76,8 @@ public class Critter2 extends Critter{
 		return true;//stay and fight
 	}
 	@Override
-	public CritterShape viewShape() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public CritterShape viewShape() { return CritterShape.STAR; }
+	@Override
+	public javafx.scene.paint.Color viewColor() { return javafx.scene.paint.Color.ORANGE; }
 	
 }

@@ -8,10 +8,10 @@ public class AlgaephobicCritter extends Critter {
 	public String toString() { return "S"; }
 
 	public AlgaephobicCritter() {
-		Params.look_energy_cost = 0;
-		Params.walk_energy_cost = 0;
-		Params.run_energy_cost = 0;
-		Params.refresh_algae_count = 0;
+//		Params.look_energy_cost = 0;
+//		Params.walk_energy_cost = 0;
+//		Params.run_energy_cost = 0;
+//		Params.refresh_algae_count = 0;
 	}
 
 	public boolean fight(String not_used) { return false; }

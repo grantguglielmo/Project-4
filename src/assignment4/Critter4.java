@@ -12,6 +12,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 /**
  * This critter alternates its movement style every time step. If the critter moved diagonally
  * during the last time step, it will move along the grid during the current time step. Alternately,
@@ -67,8 +69,7 @@ public class Critter4 extends Critter {
 	}
 
 	@Override
-	public CritterShape viewShape() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public CritterShape viewShape() { return CritterShape.TRIANGLE; }
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.CYAN; }
 }

@@ -11,6 +11,7 @@
  */
 package assignment4; // cannot be in default package
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,10 +20,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -41,11 +48,17 @@ import java.lang.reflect.Method;
  */
 public class Main extends Application{
 	
-	public static GridPane g;
+	public static GraphicsContext gc;
 	public static int scale = (int)Math.max(1,80000/(Params.world_height*Params.world_width));
 	static Scanner kb; // scanner connected to keyboard input, or input file
 	private static String inputFile; // input file, used instead of keyboard
 										// input if specified
+	public static int stepNum = 1;
+	public static int CritterNum = 1;
+	public static int animSpeed = 1;
+	public static String CritterMake = "Algae";
+	public static String CritterStat = "Critter";
+	public static ArrayList<String> crits = new ArrayList<String>();
 	static ByteArrayOutputStream testOutputString; // if test specified, holds
 													// all console output
 	private static String myPackage; // package of Critter file. Critter cannot
@@ -214,46 +227,133 @@ public class Main extends Application{
 	}
 	
 	public static void write(Critter c, int x, int y){
-		Shape shape;
 		switch(c.viewShape()){
 		case CIRCLE:
-			shape = new Circle(scale / 2);
-			shape.setFill(c.viewFillColor());
+				gc.setStroke(c.viewOutlineColor());
+				gc.strokeOval(x*scale, y*scale, scale, scale);
+				gc.setFill(c.viewFillColor());
+				gc.fillOval(x*scale, y*scale, scale, scale);
 			break;
 		case SQUARE:
-			shape = new Rectangle(scale, scale);
+				gc.setStroke(c.viewOutlineColor());
+				gc.strokeRect(x*scale, y*scale, scale, scale);
+				gc.setFill(c.viewFillColor());
+				gc.fillRect(x*scale, y*scale, scale, scale);
+			break;
 		case TRIANGLE:
-			
+				gc.setStroke(c.viewOutlineColor());
+				gc.strokePolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{y*scale, (y+1)*scale, (y+1)*scale}, 3);
+				gc.setFill(c.viewFillColor());
+				gc.fillPolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{y*scale, (y+1)*scale, (y+1)*scale}, 3);
+			break;
 		case DIAMOND:
+				gc.setStroke(c.viewOutlineColor());
+				gc.strokePolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale + scale/2, x*scale},
+	                       new double[]{y*scale, y*scale + scale/2, (y+1)*scale, y*scale + scale/2}, 4);
+				gc.setFill(c.viewFillColor());
+				gc.fillPolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale + scale/2, x*scale},
+	                       new double[]{y*scale, y*scale + scale/2, (y+1)*scale, y*scale + scale/2}, 4);
+			break;
 		case STAR:
+				gc.setStroke(c.viewOutlineColor());
+				gc.strokePolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{y*scale, (y+1)*scale - scale/4, (y+1)*scale - scale/4}, 3);
+				gc.strokePolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{(y+1)*scale, y*scale + scale/4, y*scale + scale/4}, 3);
+				gc.setFill(c.viewFillColor());
+				gc.fillPolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{y*scale, (y+1)*scale - scale/4, (y+1)*scale - scale/4}, 3);
+				gc.fillPolygon(new double[]{x*scale + scale/2, (x+1)*scale, x*scale},
+	                       new double[]{(y+1)*scale, y*scale + scale/4, y*scale + scale/4}, 3);
+			break;
 		default:
-			shape = new Circle();
+			gc.setStroke(c.viewOutlineColor());
+			gc.strokeOval(x*scale, y*scale, scale, scale);
+			gc.setFill(c.viewFillColor());
+			gc.fillOval(x*scale, y*scale, scale, scale);
+		break;
 		}
-		g.add(shape, x, y);
 }
-
+	public static void findCritters(ComboBox<String> box){
+		if(crits.size() == 0){
+		File folder = new File("src/" + myPackage);
+		File[] listOfFiles = folder.listFiles();
+		ArrayList<String> files = new ArrayList<String>();
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+			String x = listOfFiles[i].getName();
+			files.add(x.split("\\.")[0]);
+			}
+		}
+		
+		    for (int i = 0; i < files.size(); i++) {
+		        try {
+					Class<?> testClass = Class.forName(myPackage + "." + files.get(i));// sets
+					// testClass to
+					// critter_class_name
+					@SuppressWarnings("unused")
+					Critter makeCritter = (Critter) testClass.newInstance();// runs default
+																	// constructor for
+																	// testClass
+					if(Class.forName(myPackage + ".Critter").isAssignableFrom(testClass)){
+						crits.add(files.get(i));
+					}
+				} catch (Exception e) {// catch any errors and throw invalid critter
+										// exception
+					
+				}
+		      } 
+		}
+		 for(String s : crits){
+			 box.getItems().add(s);
+		 }
+	}
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		int x_val = 400;
 		int y_val = 900;
 		primaryStage.setTitle("Critter World");
-		GridPane grid = new GridPane();
+		Group world = new Group();
+		Canvas grid = new Canvas( Params.world_width*scale, Params.world_height*scale);
+		GraphicsContext gcCanvas = grid.getGraphicsContext2D();
 		primaryStage.setX(x_val +42);
 		primaryStage.setY(0);
-		for(int i = 0; i < Params.world_width; i++) {
-            ColumnConstraints column = new ColumnConstraints(scale);
-            grid.getColumnConstraints().add(column);
-        }
-
-        for(int i = 0; i < Params.world_height; i++) {
-            RowConstraints row = new RowConstraints(scale);
-            grid.getRowConstraints().add(row);
-        }
-        g = grid;
+//		for(int i = 0; i < Params.world_width; i++) {
+//            ColumnConstraints column = new ColumnConstraints(scale);
+//            grid.getColumnConstraints().add(column);
+//        }
+//
+//        for(int i = 0; i < Params.world_height; i++) {
+//            RowConstraints row = new RowConstraints(scale);
+//            grid.getRowConstraints().add(row);
+//        }
+        gc = gcCanvas;
+        world.getChildren().add(grid);
 		Critter.displayWorld();
-		Scene s = new Scene(grid, Params.world_width*scale, Params.world_height*scale, Color.WHITE);
+		Scene s = new Scene(world, Params.world_width*scale, Params.world_height*scale, Color.WHITE);
 		primaryStage.setScene(s);
 		primaryStage.show();
+		
+		
+		Stage statscreen = new Stage();
+		statscreen.setTitle("Stats");
+		statscreen.setX(x_val +42);
+		statscreen.setY(Params.world_height*scale + 42);
+		TextArea textArea = new TextArea();
+		VBox vbox = new VBox(textArea);
+        Scene scenetext = new Scene(vbox, 1200, 150);
+        OutputStream out = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                textArea.appendText(String.valueOf((char)b));
+            }
+        };
+        System.setOut(new PrintStream(out, true));
+        System.setErr(new PrintStream(out, true));
+        statscreen.setScene(scenetext);
+        statscreen.show();
 		
 		GridPane root = new GridPane();
 		Stage control = new Stage();
@@ -265,34 +365,159 @@ public class Main extends Application{
 		
 		ColumnConstraints column = new ColumnConstraints(x_val/3);
         root.getColumnConstraints().add(column);
+        root.getColumnConstraints().add(column);
         RowConstraints row = new RowConstraints(y_val/9);
+        root.getRowConstraints().add(row);
+        root.getRowConstraints().add(row);
+        root.getRowConstraints().add(row);
         root.getRowConstraints().add(row);
         root.getRowConstraints().add(row);
         Button btn0 = new Button();
         btn0.setText("make");
         Button btn1 = new Button();
         btn1.setText("step");
-        root.add(btn0, 1, 1);
+        Button btn2 = new Button();
+        btn2.setText("stats");
+        Button btn3 = new Button();
+        btn3.setText("quit");
+        Button btn4 = new Button();
+        btn4.setText("run");
+        Button btn5 = new Button();
+        btn5.setText("stop");
+        ComboBox<String> box0 = new ComboBox<String>();
+		findCritters(box0);
+		box0.setEditable(true);
+		ComboBox<String> box1 = new ComboBox<String>();
+		box1.getItems().addAll("1","10","42","100","1000");
+		box1.setEditable(true);
+        ComboBox<String> box = new ComboBox<String>();
+		box.getItems().addAll("1","10","42","100","1000");
+		box.setEditable(true);
+		ComboBox<String> box2 = new ComboBox<String>();
+		box2.getItems().add("Critter");
+		findCritters(box2);
+		box2.setEditable(true);
+		ComboBox<String> box3 = new ComboBox<String>();
+		box3.getItems().addAll("1","2","5","10","20","50","100");
+		box3.setEditable(true);
+        root.add(btn0, 2, 1);
         root.add(btn1, 1, 2);
+        root.add(box, 0, 2);
+        root.add(box0, 0, 1);
+        root.add(box1, 1, 1);
+        root.add(box2, 0, 3);
+        root.add(btn2, 1, 3);
+        root.add(btn3, 1, 5);
+        root.add(btn4, 1, 4);
+        root.add(btn5, 2, 4);
+        root.add(box3, 0, 4);
+        box.setValue("1");
+        box0.setValue("Algae");
+        box1.setValue("1");
+        box3.setValue("1");
+        box2.setValue("Critter");
         btn0.setOnAction(new EventHandler<ActionEvent>() {
 			 
             @Override
             public void handle(ActionEvent event) {
                 try {
-					Critter.makeCritter("Algae");
-				} catch (InvalidCritterException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                	for(int i = 0; i < CritterNum; i++){
+                		Critter.makeCritter(CritterMake);
+                	}
+				} catch (Exception e) {
+					
 				}
+            }
+        });
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(1);
+            }
+        });
+        btn2.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                	textArea.clear();
+                	List<Critter> statList = Critter.getInstances(CritterStat);
+					Class<?>[] types = { List.class };
+					Class<?> testClass = Class.forName(myPackage + "." + CritterStat);
+					Method stat = testClass.getMethod("runStats", types);
+					stat.invoke(null, statList);
+				} catch (Exception e) {
+					
+				}
+            }
+        });
+        box0.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+                CritterMake = box0.getValue();
+                
+            }
+        });
+        box2.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+                CritterStat = box2.getValue();
+                
+            }
+        });
+        box3.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+            	try{
+                    CritterNum = Integer.parseInt(box3.getValue());
+                	}
+                	catch(Exception e){
+                		CritterNum = 1;
+                	}
+                
+            }
+        });
+        box1.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+            	try{
+                    CritterNum = Integer.parseInt(box1.getValue());
+                	}
+                	catch(Exception e){
+                		CritterNum = 1;
+                	}
+                
+            }
+        });
+        box.setOnAction(new EventHandler<ActionEvent>() {
+			 
+            @Override
+            public void handle(ActionEvent event) {
+            	try{
+                stepNum = Integer.parseInt(box.getValue());
+            	}
+            	catch(Exception e){
+            		stepNum = 1;
+            	}
+                
             }
         });
         btn1.setOnAction(new EventHandler<ActionEvent>() {
 			 
             @Override
             public void handle(ActionEvent event) {
+            	for(int i = 0; i < stepNum; i++){
                 Critter.worldTimeStep();
+            	}
+                gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
                 Critter.displayWorld();
                 primaryStage.show();
+                btn2.fire();
             }
         });
 		control.show();

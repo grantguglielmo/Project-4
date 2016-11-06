@@ -12,6 +12,8 @@
 
 package assignment4;
 
+import assignment4.Critter.CritterShape;
+
 /**
  * This critter begins by randomly choosing a direction out of the possible eight. 
  * If the direction it chooses will not result in backtracking, then it will walk in that
@@ -66,8 +68,9 @@ public class Critter3 extends Critter {
 	}
 
 	@Override
-	public CritterShape viewShape() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public CritterShape viewShape() { return CritterShape.DIAMOND; }
+	@Override
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.RED; }
+	@Override
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.GREEN; }
 }
